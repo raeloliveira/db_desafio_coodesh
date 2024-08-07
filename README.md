@@ -32,11 +32,34 @@ Para entender o modelo, revisar o diagrama a seguir:
 Construir as seguintes consultas:
 
 - Listar todos Clientes que não tenham realizado uma compra;
+
+select a.first_name||' '||a.last_name as customer_name from customers a where not exists (select 1 from 
+orders b on b.customer_id = a.customer_id);
+  
 - Listar os Produtos que não tenham sido comprados
+
+select a.product_name from products a where not exists (select 1 from 
+order_items b on b.product_id = a.product_id);
+  
 - Listar os Produtos sem Estoque;
-- Agrupar a quantidade de vendas que uma determinada Marca por Loja. 
+
+select b.product_name from stocks a left join products b 
+on a.product_id = b.product_id where a.quantity = 0;  
+  
+- Agrupar a quantidade de vendas que uma determinada Marca por Loja.
+
+  select b.store_name,count(a.*) as qtd_sales
+  from orders a
+  left join stores b on a.store_id = b.store_id
+  left join stocks c on b.store_id = c.store_id
+  left join products d on c.product_id = d.product_id
+  left join brands e on d.brand_id = e.brand_id
+  where e.brand_name = 'BRAND_NAME';
+  
 - Listar os Funcionarios que não estejam relacionados a um Pedido.
 
+select a.* from staffs a where not exists (select 1 from 
+orders b on b.staff_id = a.staff_id);
 
 ## Readme do Repositório
 
