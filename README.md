@@ -1,4 +1,4 @@
-# DBA Challenge 20240802
+# DBA Challenge 20240802 - Israel Pereira Oliveira
 
 
 ## Introdução
@@ -33,20 +33,28 @@ Construir as seguintes consultas:
 
 - Listar todos Clientes que não tenham realizado uma compra;
 
+/*todo registro de compra possui a chave do cliente que a realizou , sendo assim seleciono todos os clientes que não se encontram na tabela de compras ( pelo campo customer_id). */
+
 select a.first_name||' '||a.last_name as customer_name from customers a where not exists (select 1 from 
 orders b on b.customer_id = a.customer_id);
   
 - Listar os Produtos que não tenham sido comprados
+
+/*todo registro de compra possui um item de compra(order_items) sendo assim utilizei a mesma logica da consulta acima apenas consultando produtos que não existiam na tabela ordem_items.*/
 
 select a.product_name from products a where not exists (select 1 from 
 order_items b on b.product_id = a.product_id);
   
 - Listar os Produtos sem Estoque;
 
+/*selecionei apenas os produtos onde na tabela de estoque continham o campo quantidade = 0 (sem estoque).*/
+
 select b.product_name from stocks a left join products b 
 on a.product_id = b.product_id where a.quantity = 0;  
   
 - Agrupar a quantidade de vendas que uma determinada Marca por Loja.
+
+/*interpretei a partir da pergunta que gostariamos de ver a quantidade de vendas de uma determinada marca , sendo assim realcionei a marca através de todas as tabelas até a tabela de vendas , agrupei o volume pelo nome de cada loja que fez a venda de uma determinada marca ( nome da marca nesse caso será imputado pelo usuario).*/
 
   select b.store_name,count(a.*) as qtd_sales
   from orders a
